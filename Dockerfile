@@ -20,8 +20,12 @@ RUN mkdir -p /var/log/supervisor
 # Supervisor Configuration
 COPY ./supervisord/conf.d/* $SCPATH/
 
+RUN npm install typescript
+RUN npm install @types/node
+RUN tsc src --module es6 --outDir
+
 # Application Code
-COPY *.js* $AP/
+COPY src $AP/
 
 WORKDIR $AP
 
