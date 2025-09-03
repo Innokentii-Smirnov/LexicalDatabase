@@ -1,4 +1,7 @@
-var express = require('express');
+import express from 'express';
+import {LexicalDatabase} from './lexicalDatabase.js';
+
+const lexicalDatabase = new LexicalDatabase();
 
 // Constants
 var DEFAULT_PORT = 8080;
@@ -9,7 +12,7 @@ var WHO = process.env.WHO || DEFAULT_WHO;
 // App
 var app = express();
 app.get('/', function (req, res) {
-  res.send('Hello ' + WHO + '. Wish you were here.\n');
+  res.send(lexicalDatabase.toJSON());
 });
 
 app.listen(PORT)
