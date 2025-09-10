@@ -1,7 +1,10 @@
+import fs from 'fs';
 import express from 'express';
 import {LexicalDatabase} from './lexicalDatabase.js';
 
-const lexicalDatabase = new LexicalDatabase();
+const jsonText = fs.readFileSync('/data/data/Dictionary.json', 'utf8');
+const obj = JSON.parse(jsonText);
+const lexicalDatabase = new LexicalDatabase(obj);
 
 // Constants
 var DEFAULT_PORT = 8080;

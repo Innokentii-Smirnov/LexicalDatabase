@@ -20,16 +20,12 @@ RUN mkdir -p /var/log/supervisor
 # Supervisor Configuration
 COPY ./supervisord/conf.d/* $SCPATH/
 
-RUN npm install typescript
-RUN npm install @types/node
-RUN tsc src --module es6 --outDir
-
 # Application Code
-COPY src $AP/
-
 WORKDIR $AP
-
-RUN npm install
+COPY ./package.json ./
+RUN npm install && npm install typescript -g
+COPY ./src ./src
+RUN tsc ./src/* --module NodeNext --outDir . --moduleResolution nodenext
 
 CMD ["supervisord", "-n"]
 
