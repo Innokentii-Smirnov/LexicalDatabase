@@ -1,19 +1,19 @@
-export function mapToObject(map) {
-  const object = {};
+export function mapToObject<TValue>(map: Map<string, TValue>): {[key: string]: TValue} {
+  const obj: {[key: string]: TValue} = {};
   for (const [key, value] of map) {
-    object[key] = value;
+    obj[key] = value;
   }
-  return object;
+  return obj;
 }
 
-export function setMapToObject(map) {
-  const object = {};
+export function setMapToObject<TValue>(map: Map<string, Set<TValue>>): {[key: string]: TValue[]} {
+  const obj: {[key: string]: TValue[]} = {};
   for (const [key, valueSet] of map) {
     const values = [];
     for (const value of valueSet) {
       values.push(value);
     }
-    object[key] = values;
+    obj[key] = values;
   }
-  return object;
+  return obj;
 }

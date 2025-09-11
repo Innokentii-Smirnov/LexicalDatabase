@@ -1,0 +1,167 @@
+import { parseMultiAnalysisString } from './analysisOptions';
+import { isSingleEncliticsAnalysis, writeEncliticsAnalysis } from './encliticsAnalysis';
+import { selectedMultiMorphAnalysisWithEnclitics } from './selectedMorphologicalAnalysis';
+const morphologyAttributeNameRegex = /^mrp(\d+)$/;
+export function isSingleMorphologicalAnalysis(ma) {
+    return 'analysis' in ma;
+}
+export function multiMorphAnalysisWithoutEnclitics(number, referenceWord) {
+    return {
+        _type: 'MultiMorphAnalysisWithoutEnclitics',
+        number,
+        translation: '',
+        referenceWord: referenceWord,
+        analysisOptions: [],
+        encliticsAnalysis: undefined,
+        determinative: undefined,
+        paradigmClass: ''
+    };
+}
+export function isMultiMorphologicalAnalysis(ma) {
+    return 'analysisOptions' in ma;
+}
+// Helper functions
+function splitAtSingle(value, splitString, splitAtLast = false) {
+    const splitIndex = splitAtLast
+        ? value.lastIndexOf(splitString)
+        : value.indexOf(splitString);
+    return splitIndex >= 0
+        ? [value.substring(0, splitIndex).trim(), value.substring(splitIndex + splitString.length).trim()]
+        : [value, undefined];
+}
+// Reading
+function readEncliticsChain(encliticsChain, selectedEnclitics) {
+    const splitEncliticsChain = encliticsChain.split('@').map((s) => s.trim());
+    if (!splitEncliticsChain || splitEncliticsChain.length < 2) {
+        return undefined;
+    }
+    const [enclitics, analysesString] = splitEncliticsChain;
+    return analysesString.includes('{')
+        ? { enclitics, analysisOptions: parseMultiAnalysisString(splitEncliticsChain[1], selectedEnclitics) }
+        : { enclitics, analysis: analysesString };
+}
+export function readMorphologicalAnalysis(number, content, initialSelectedMorphologies) {
+    if (!content) {
+        return undefined;
+    }
+    const [referenceWord, restWithoutReferenceWord] = splitAtSingle(content, '@');
+    if (!restWithoutReferenceWord) {
+        return undefined;
+    }
+    const [translation, restWithoutTranslation] = splitAtSingle(restWithoutReferenceWord, '@');
+    if (!restWithoutTranslation) {
+        return undefined;
+    }
+    const [analysesString, restWithoutAnalyses] = splitAtSingle(restWithoutTranslation, '@');
+    if (!restWithoutAnalyses) {
+        return undefined;
+    }
+    const [otherString, determinativeString] = splitAtSingle(restWithoutAnalyses, '@', true);
+    const determinative = determinativeString && determinativeString.trim().length > 0
+        ? determinativeString.trim()
+        : undefined;
+    const [paradigmClass, encliticsChain] = splitAtSingle(otherString, '+=');
+    const selectedAnalyses = initialSelectedMorphologies.filter((sao) => sao.number === number);
+    const selectedAnalysisLetters = selectedAnalyses
+        .flatMap((selectedMorphAnalysis) => 'morphLetter' in selectedMorphAnalysis ? [selectedMorphAnalysis.morphLetter] : [])
+        .filter((l) => !!l);
+    const selectedEncliticsLetters = Array.from(new Set(selectedAnalyses.flatMap((selectedMorphAnalysis) => selectedMorphAnalysis.encLetter !== undefined
+        ? [selectedMorphAnalysis.encLetter]
+        : [])));
+    const encliticsAnalysis = encliticsChain ? readEncliticsChain(encliticsChain, selectedEncliticsLetters) : undefined;
+    if (analysesString.includes('{')) {
+        const analysisOptions = parseMultiAnalysisString(analysesString, selectedAnalysisLetters);
+        if (encliticsAnalysis === undefined) {
+            return {
+                _type: 'MultiMorphAnalysisWithoutEnclitics',
+                number,
+                translation,
+                referenceWord,
+                analysisOptions,
+                paradigmClass,
+                encliticsAnalysis,
+                determinative: determinative
+            };
+        }
+        else if (isSingleEncliticsAnalysis(encliticsAnalysis)) {
+            return {
+                _type: 'MultiMorphAnalysisWithSingleEnclitics',
+                number,
+                translation,
+                referenceWord,
+                analysisOptions,
+                paradigmClass,
+                encliticsAnalysis,
+                determinative: determinative
+            };
+        }
+        else {
+            const selectedAnalysisCombinations = selectedAnalyses.map(({ number, morphLetter, encLetter }) => selectedMultiMorphAnalysisWithEnclitics(number, morphLetter || '', encLetter || ''));
+            return {
+                _type: 'MultiMorphAnalysisWithMultiEnclitics',
+                number,
+                translation,
+                referenceWord,
+                // remove field selected for unit tests...
+                analysisOptions: analysisOptions.map(({ letter, analysis }) => ({ letter, analysis })),
+                paradigmClass,
+                encliticsAnalysis,
+                determinative: determinative,
+                selectedAnalysisCombinations
+            };
+        }
+    }
+    else {
+        const selected = selectedAnalyses.length > 0;
+        const analysis = analysesString;
+        if (encliticsAnalysis == undefined) {
+            return {
+                _type: 'SingleMorphAnalysisWithoutEnclitics',
+                number,
+                referenceWord,
+                translation,
+                paradigmClass,
+                determinative: determinative,
+                analysis,
+                encliticsAnalysis,
+                selected
+            };
+        }
+        else if (isSingleEncliticsAnalysis(encliticsAnalysis)) {
+            return {
+                _type: 'SingleMorphAnalysisWithSingleEnclitics',
+                number,
+                referenceWord,
+                translation,
+                paradigmClass,
+                determinative: determinative,
+                analysis,
+                encliticsAnalysis,
+                selected
+            };
+        }
+        else {
+            return {
+                _type: 'SingleMorphAnalysisWithMultiEnclitics',
+                number,
+                referenceWord,
+                translation,
+                paradigmClass,
+                determinative: determinative,
+                analysis,
+                encliticsAnalysis
+            };
+        }
+    }
+}
+// Writing
+export function writeMorphAnalysisValue(morphologicalAnalysis) {
+    const { referenceWord, translation, paradigmClass, determinative } = morphologicalAnalysis;
+    const enc = morphologicalAnalysis.encliticsAnalysis !== undefined
+        ? writeEncliticsAnalysis(morphologicalAnalysis.encliticsAnalysis)
+        : undefined;
+    const analysisString = 'analysis' in morphologicalAnalysis
+        ? morphologicalAnalysis.analysis
+        : morphologicalAnalysis.analysisOptions.map(({ letter, analysis }) => `{ ${letter} → ${analysis}}`).join(' ');
+    return [referenceWord, translation, analysisString, paradigmClass + (enc ? ' += ' + enc : ''), determinative || ''].join(' @ ');
+}
