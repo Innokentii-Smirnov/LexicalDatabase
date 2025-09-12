@@ -23,6 +23,7 @@ app.post('/replaceMorphologicalAnalysis',
          jsonParser, function (req, res) {
   const {transcriptions, origin, target} = req.body;
   lexicalDatabase.replaceMorphologicalAnalysis(transcriptions.split(','), origin, target);
+  res.sendStatus(204);
 });
 
 app.listen(PORT)
