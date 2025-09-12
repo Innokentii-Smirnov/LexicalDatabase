@@ -47,9 +47,9 @@ export class LexicalDatabase {
     const jsonText = JSON.stringify(obj, undefined, '\t');
     return jsonText;
   }
-  replace(transcriptions: string[], origin: string, target: string): void {
+  replaceMorphologicalAnalysis(transcriptions: string[], origin: string, target: string): void {
     this.modifyAnalysis(transcriptions, origin, target);
-    this.replaceMorphologicalAnalysis(origin, target);
+    this.updateCorpus(origin, target);
     this.updateConcordanceKey(origin, target);
   }
   modifyAnalysis(transcriptions: string[], oldAnalysis: string, newAnalysis: string): void {
@@ -64,7 +64,7 @@ export class LexicalDatabase {
   updateConcordanceKey(oldAnalysis: string, newAnalysis: string): void {
     replaceKey(this.concordance, oldAnalysis, newAnalysis);
   }
-  replaceMorphologicalAnalysis(oldAnalysis: string, newAnalysis: string): void {
+  updateCorpus(oldAnalysis: string, newAnalysis: string): void {
     const oldMa = readMorphAnalysisValue(oldAnalysis);
     if (oldMa !== undefined) {
       const newMa = readMorphAnalysisValue(newAnalysis);
