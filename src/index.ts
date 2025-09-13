@@ -22,7 +22,7 @@ app.get('/', function (req, res) {
 app.post('/replaceMorphologicalAnalysis',
          jsonParser, function (req, res) {
   const {transcriptions, origin, target} = req.body;
-  lexicalDatabase.replaceMorphologicalAnalysis(transcriptions.split(','), origin, target);
+  lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
   res.sendStatus(204);
 });
 
