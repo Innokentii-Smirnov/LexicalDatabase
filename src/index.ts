@@ -1,7 +1,7 @@
 import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
-import {LexicalDatabase} from './lexicalDatabase.js';
+import {LexicalDatabase} from './objects/lexicalDatabase.js';
 
 const jsonText = fs.readFileSync('/data/data/Dictionary.json', 'utf8');
 const obj = JSON.parse(jsonText);

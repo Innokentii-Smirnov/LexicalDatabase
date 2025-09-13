@@ -1,6 +1,6 @@
-import { MorphologicalAnalysis } from './model/morphologicalAnalysis.js';
-import { getFirstSelectedMorphTag } from './morphologicalAnalysis/auxiliary.js';
-import { makeGloss } from './common/auxiliary.js';
+import { MorphologicalAnalysis } from '../model/morphologicalAnalysis.js';
+import { getFirstSelectedMorphTag } from '../morphologicalAnalysis/auxiliary.js';
+import { makeGloss } from '../common/auxiliary.js';
 
 export type Word = {
   transliteration: string;
