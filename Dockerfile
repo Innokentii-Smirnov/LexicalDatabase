@@ -9,8 +9,8 @@ RUN npx tsc
 
 # Production Stage
 FROM node:18-alpine
-WORKDIR /data/app
+WORKDIR /data
 COPY ./package*.json ./
 RUN npm install --omit=dev
-COPY --from=build /data/app ./
+COPY --from=build /data/app ./app
 CMD ["/usr/local/bin/node", "/data/app/index.js"]
