@@ -5,4 +5,4 @@ while read -r line; do
        http://localhost:8080/replaceMorphologicalAnalysis
 done < morphologicalAnalysisReplacements.jsonlines
 curl localhost:8080 > output.txt
-grep 'Hirsch|curse' < output.txt
+grep -E 'Hirsch|curse' < output.txt
