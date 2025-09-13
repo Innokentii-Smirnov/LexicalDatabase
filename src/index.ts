@@ -19,10 +19,27 @@ const jsonParser = bodyParser.json();
 app.get('/', function (req, res) {
   res.send(lexicalDatabase.toJSON());
 });
-app.post('/replaceMorphologicalAnalysis',
-         jsonParser, function (req, res) {
+app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
   const {transcriptions, origin, target} = req.body;
   lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
+  res.sendStatus(204);
+});
+
+app.post('/replaceStem', jsonParser, function (req, res) {
+  const {oldStem, newStem, pos, translation} = req.body;
+  lexicalDatabase.changeStem(oldStem, newStem, pos, translation);
+  res.sendStatus(204);
+});
+
+app.post('/replacePos', jsonParser, function (req, res) {
+  const {stem, oldPos, newPos, translation} = req.body;
+  lexicalDatabase.changePos(stem, oldPos, newPos, translation);
+  res.sendStatus(204);
+});
+
+app.post('/replaceTranslation', jsonParser, function (req, res) {
+  const {stem, pos, oldTranslation, newTranslation} = req.body;
+  lexicalDatabase.changeTranslation(stem, pos, oldTranslation, newTranslation);
   res.sendStatus(204);
 });
 
