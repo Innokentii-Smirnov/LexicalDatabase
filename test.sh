@@ -1,4 +1,8 @@
-curl --header "Content-Type: application/json" \
-     --data-raw '{"transcriptions":"nāli","origin":"nāli @ Rehbock @ .ABS @ noun @ ","target":"noli @ Hirsch @ .ABS @ noun @ "}' \
-     http://localhost:8080/replaceMorphologicalAnalysis
-curl localhost:8080 | grep 'Hirsch'
+while read -r line; do
+  echo $line | jq .
+  curl --header "Content-Type: application/json" \
+       --data-raw "$line" \
+       http://localhost:8080/replaceMorphologicalAnalysis
+done < morphologicalAnalysisReplacements.jsonlines
+curl localhost:8080 > output.txt
+grep 'Hirsch|curse' < output.txt

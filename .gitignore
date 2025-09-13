@@ -1,4 +1,5 @@
 .DS_Store
+output.txt
 
 # Node.js
 /node_modules
