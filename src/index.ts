@@ -17,6 +17,7 @@ var WHO = process.env.WHO || DEFAULT_WHO;
 var app = express();
 const jsonParser = bodyParser.json();
 app.get('/', function (req, res) {
+  res.type('json');
   res.send(lexicalDatabase.toJSON());
 });
 app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
