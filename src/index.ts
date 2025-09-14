@@ -44,5 +44,11 @@ app.post('/replaceTranslation', jsonParser, function (req, res) {
   res.sendStatus(204);
 });
 
+app.post('/editWordAnnotation', jsonParser, function(req, res) {
+  const { text, lnr, position, transcription, oldAnalysis, newAnalysis } = req.body;
+  lexicalDatabase.editWordAnnotation(text, lnr, position, transcription,
+                                     oldAnalysis, newAnalysis);
+});
+
 app.listen(PORT)
 console.log('Running on http://localhost:' + PORT);

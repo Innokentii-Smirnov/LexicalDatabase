@@ -1,5 +1,5 @@
 import { setMapToObject } from '../conversion.js';
-import { objectToSetValuedMap, replaceKey } from '../common/utils.js';
+import { objectToSetValuedMap, replaceKey, add } from '../common/utils.js';
 import { writeMorphAnalysisValue, MorphologicalAnalysis } from '../model/morphologicalAnalysis.js';
 
 type Representation = {[key: string]: string[]};
@@ -27,5 +27,14 @@ export class Concordance {
     } else {
       return Array.from(current);
     }
+  }
+  editWordAnnotation(attestation: string, oldMa: string, newMa: string, remove: boolean): void {
+    if (remove) {
+      const oldAnalysisAttestations = this.concordance.get(oldMa);
+      if (oldAnalysisAttestations !== undefined) {
+        oldAnalysisAttestations.delete(attestation);
+      }
+    }
+    add(this.concordance, newMa, attestation);
   }
 }

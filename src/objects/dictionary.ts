@@ -1,5 +1,5 @@
 import { setMapToObject } from '../conversion.js';
-import { objectToSetValuedMap } from '../common/utils.js';
+import { objectToSetValuedMap, add } from '../common/utils.js';
 
 type Representation = {[key: string]: string[]};
 
@@ -23,5 +23,8 @@ export class Dictionary {
         valueSet.add(newAnalysis);
       }
     }
+  }
+  add(transcription: string, analysis: string) {
+    add(this.dictionary, transcription, analysis);
   }
 }

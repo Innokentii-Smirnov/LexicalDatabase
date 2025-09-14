@@ -1,5 +1,8 @@
 import { SelectableLetteredAnalysisOption } from '../model/analysisOptions.js';
 import { MorphologicalAnalysis } from '../model/morphologicalAnalysis.js';
+import { makeGloss } from './auxiliary.js';
+
+const errorTag = 'ERROR';
 
 export function objectToMap<TValue>(object: {[key: string]: TValue}): Map<string, TValue> {
   const map = new Map<string, TValue>();
@@ -132,4 +135,13 @@ export function getMorphTags(analysis: MorphologicalAnalysis): string[] | null {
     default:
       return null;
   }
+}
+
+export function makeGlossFromMorphologicalAnalysis(
+  morphologicalAnalysis: MorphologicalAnalysis): string {
+  const { translation } = morphologicalAnalysis;
+  const morphTags = getMorphTags(morphologicalAnalysis);
+  const hasValidTag = (morphTags !== null && morphTags.length > 0);
+  const tag = hasValidTag ? morphTags[0] : errorTag;
+  return makeGloss(translation, tag);
 }
