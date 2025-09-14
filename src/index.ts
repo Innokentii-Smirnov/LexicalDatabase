@@ -48,6 +48,7 @@ app.post('/editTokenAnnotation', jsonParser, function(req, res) {
   const { text, lnr, position, transcription, oldAnalysis, newAnalysis } = req.body;
   lexicalDatabase.editTokenAnnotation(text, lnr, position, transcription,
                                       oldAnalysis, newAnalysis);
+  res.sendStatus(204);
 });
 
 app.listen(PORT)
