@@ -28,7 +28,7 @@ export class Concordance {
       return Array.from(current);
     }
   }
-  editWordAnnotation(attestation: string, oldMa: string, newMa: string, remove: boolean): void {
+  editTokenAnnotation(attestation: string, oldMa: string, newMa: string, remove: boolean): void {
     if (remove) {
       const oldAnalysisAttestations = this.concordance.get(oldMa);
       if (oldAnalysisAttestations !== undefined) {

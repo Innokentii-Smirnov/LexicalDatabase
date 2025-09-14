@@ -44,10 +44,10 @@ app.post('/replaceTranslation', jsonParser, function (req, res) {
   res.sendStatus(204);
 });
 
-app.post('/editWordAnnotation', jsonParser, function(req, res) {
+app.post('/editTokenAnnotation', jsonParser, function(req, res) {
   const { text, lnr, position, transcription, oldAnalysis, newAnalysis } = req.body;
-  lexicalDatabase.editWordAnnotation(text, lnr, position, transcription,
-                                     oldAnalysis, newAnalysis);
+  lexicalDatabase.editTokenAnnotation(text, lnr, position, transcription,
+                                      oldAnalysis, newAnalysis);
 });
 
 app.listen(PORT)

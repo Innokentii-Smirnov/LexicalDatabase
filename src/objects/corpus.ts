@@ -39,7 +39,7 @@ export class Corpus {
       }
     }
   }
-  editWordAnnotation(attestation: string, i: number,
+  editTokenAnnotation(attestation: string, i: number,
                      oldMa: string, newMa: string): void {
     const line = this.corpus.get(attestation);
     if (line !== undefined) {

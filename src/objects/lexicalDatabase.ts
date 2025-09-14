@@ -52,17 +52,17 @@ export class LexicalDatabase {
   changeTranslation(stem: string, pos: string, oldTranslation: string, newTranslation: string): void {
     this.translationLexicon.changeTranslation(stem, pos, oldTranslation, newTranslation);
   }
-  editWordAnnotation(text: string, lnr: string, position: number,
+  editTokenAnnotation(text: string, lnr: string, position: number,
                      transcription: string, oldAnalysis: string,
                      newAnalysis: string): void {
     const attestation = text + ',' + lnr;
     const hasOtherOccurrences = this.corpus.hasOtherOccurences(oldAnalysis,
       attestation, position);
     const remove = !hasOtherOccurrences;
-    this.corpus.editWordAnnotation(attestation, position, oldAnalysis,
-                                   newAnalysis);
-    this.concordance.editWordAnnotation(attestation, oldAnalysis, newAnalysis,
-                                        remove);
+    this.corpus.editTokenAnnotation(attestation, position, oldAnalysis,
+                                    newAnalysis);
+    this.concordance.editTokenAnnotation(attestation, oldAnalysis,
+                                         newAnalysis, remove);
     this.dictionary.add(transcription, newAnalysis);
   }
 }
