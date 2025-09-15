@@ -1,2 +1,4 @@
 source curl_jsonlines.sh
-curl_jsonlines tokenAnnotationEdits.jsonlines editTokenAnnotation
+curl_jsonlines newRecords.jsonlines addAttestation
+curl_jsonlines oldRecords.jsonlines removeAttestation
+curl_jsonlines lineUpdates.jsonlines updateLine
