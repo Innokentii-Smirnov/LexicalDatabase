@@ -1,8 +1,6 @@
 import { mapToObject } from '../conversion.js';
-import { objectToMap, makeGlossFromMorphologicalAnalysis }
-  from '../common/utils.js';
-import { Word, updateMorphologicalAnalysis,
-  hasGivenAnalysis } from './word.js';
+import { objectToMap } from '../common/utils.js';
+import { Word, updateMorphologicalAnalysis } from './word.js';
 import { Concordance } from './concordance.js';
 import { readMorphAnalysisValue } from '../morphologicalAnalysis/auxiliary.js';
 import { makeGloss } from '../common/auxiliary.js';
@@ -39,43 +37,26 @@ export class Corpus {
       }
     }
   }
-  editTokenAnnotation(attestation: string, i: number,
-                     oldMa: string, newMa: string): void {
+
+  /* Add a new line to the corpus.
+   * attestation: a string identifying the added line of the form text,lnr
+   * line: an array of word representations
+   */
+  addLine(attestation: string, line: Line) {
+    this.corpus.set(attestation, line);
+  }
+
+  /* Change the annotation of a single word in the specified line.
+   * attestation: a string identifying the edited line of the form text,lnr
+   * i: the position of the edited word
+   * word: the new representation of the edited word
+   */
+  updateLine(attestation: string, i: number, word: Word): void {
     const line = this.corpus.get(attestation);
     if (line !== undefined) {
       if (0 <= i && i < line.length) {
-        const word = line[i];
-        const oldMorphologicalAnalysis = readMorphAnalysisValue(oldMa);
-        const newMorphologicalAnalysis = readMorphAnalysisValue(newMa);
-        line[i] = updateMorphologicalAnalysis(word,
-          oldMorphologicalAnalysis, newMorphologicalAnalysis);
+        line[i] = word;
       }
     }
-  }
-
-  /* Check whether an analysis occurs in any position other
-   * than the specified one.
-  */
-  hasOtherOccurences(analysis: string, attestation: string,
-                     position: number): boolean {
-    const line = this.corpus.get(attestation);
-    if (line !== undefined) {
-      const morphologicalAnalysis = readMorphAnalysisValue(analysis);
-      if (morphologicalAnalysis !== undefined) {
-        const gloss = makeGlossFromMorphologicalAnalysis(
-          morphologicalAnalysis);
-        for (let i = 0; i < line.length; i++) {
-          if (i !== position) {
-            const word = line[i];
-            const hasSameAnalysis = hasGivenAnalysis(word, gloss,
-              morphologicalAnalysis);
-            if (hasSameAnalysis) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
   }
 }

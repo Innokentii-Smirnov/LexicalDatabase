@@ -44,10 +44,27 @@ app.post('/replaceTranslation', jsonParser, function (req, res) {
   res.sendStatus(204);
 });
 
-app.post('/editTokenAnnotation', jsonParser, function(req, res) {
-  const { text, lnr, position, transcription, oldAnalysis, newAnalysis } = req.body;
-  lexicalDatabase.editTokenAnnotation(text, lnr, position, transcription,
-                                      oldAnalysis, newAnalysis);
+app.post('/addAttestation', jsonParser, function(req, res) {
+  const { analysis, attestation } = req.body;
+  lexicalDatabase.concordance.addAttestation(analysis, attestation);
+  res.sendStatus(204);
+});
+
+app.post('/removeAttestation', jsonParser, function(req, res) {
+  const { analysis, attestation } = req.body;
+  lexicalDatabase.concordance.removeAttestation(analysis, attestation);
+  res.sendStatus(204);
+});
+
+app.post('/addLine', jsonParser, function(req, res) {
+  const { attestation, line } = req.body;
+  lexicalDatabase.corpus.addLine(attestation, line);
+  res.sendStatus(204);
+});
+
+app.post('/updateLine', jsonParser, function(req, res) {
+  const { attestation, position, word } = req.body;
+  lexicalDatabase.corpus.updateLine(attestation, position, word);
   res.sendStatus(204);
 });
 

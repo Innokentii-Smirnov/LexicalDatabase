@@ -35,4 +35,19 @@ export class Concordance {
     }
     add(this.concordance, newMa, attestation);
   }
+
+  /* Add a new attestation for the given morphological analysis
+   * attestation: a string identifying a text line of the form text,lnr
+   */
+  addAttestation(morphologicalAnalysis: string, attestation: string) {
+    add(this.concordance, morphologicalAnalysis, attestation);
+  }
+
+
+  /* Remove an attestation for the given morphological analysis
+   * attestation: a string identifying a text line of the form text,lnr
+   */
+  removeAttestation(morphologicalAnalysis: string, attestation: string) {
+    remove(this.concordance, morphologicalAnalysis, attestation);
+  }
 }
