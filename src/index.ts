@@ -24,48 +24,56 @@ app.get('/', function (req, res) {
 app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
   const {transcriptions, origin, target} = req.body;
   lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/replaceStem', jsonParser, function (req, res) {
   const {oldStem, newStem, pos, translation} = req.body;
   lexicalDatabase.changeStem(oldStem, newStem, pos, translation);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/replacePos', jsonParser, function (req, res) {
   const {stem, oldPos, newPos, translation} = req.body;
   lexicalDatabase.changePos(stem, oldPos, newPos, translation);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/replaceTranslation', jsonParser, function (req, res) {
   const {stem, pos, oldTranslation, newTranslation} = req.body;
   lexicalDatabase.changeTranslation(stem, pos, oldTranslation, newTranslation);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/addAttestation', jsonParser, function(req, res) {
   const { analysis, attestation } = req.body;
   lexicalDatabase.concordance.addAttestation(analysis, attestation);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/removeAttestation', jsonParser, function(req, res) {
   const { analysis, attestation } = req.body;
   lexicalDatabase.concordance.removeAttestation(analysis, attestation);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/addLine', jsonParser, function(req, res) {
   const { attestation, line } = req.body;
   lexicalDatabase.corpus.addLine(attestation, line);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
 app.post('/updateLine', jsonParser, function(req, res) {
   const { attestation, position, word } = req.body;
   lexicalDatabase.corpus.updateLine(attestation, position, word);
+  res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
 
