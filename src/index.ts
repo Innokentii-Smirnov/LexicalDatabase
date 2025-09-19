@@ -3,9 +3,16 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import {LexicalDatabase} from './objects/lexicalDatabase.js';
 
-const jsonText = fs.readFileSync('/data/data/Dictionary.json', 'utf8');
-const obj = JSON.parse(jsonText);
-const lexicalDatabase = new LexicalDatabase(obj);
+const dictionaryFilePath = '/data/data/Dictionary.json';
+
+let lexicalDatabase: LexicalDatabase;
+if (fs.existsSync(dictionaryFilePath)) {
+  const jsonText = fs.readFileSync(dictionaryFilePath, 'utf8');
+  const obj = JSON.parse(jsonText);
+  lexicalDatabase = new LexicalDatabase(obj);
+} else {
+  lexicalDatabase = new LexicalDatabase(undefined);
+}
 
 // Constants
 var DEFAULT_PORT = 8080;
@@ -27,9 +34,16 @@ app.get('/', function (req, res) {
   res.set('Access-Control-Allow-Origin', '*');
   res.send(lexicalDatabase.toJSON());
 });
-app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
+
+app.post('/uploadLexicalDatabase', jsonParser, function (req, res) {
   const {transcriptions, origin, target} = req.body;
   lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
+  res.set('Access-Control-Allow-Origin', '*');
+  res.sendStatus(204);
+});
+
+app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
+  lexicalDatabase = new LexicalDatabase(req.body);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
 });
