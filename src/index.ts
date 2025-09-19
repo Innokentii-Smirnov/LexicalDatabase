@@ -40,13 +40,15 @@ app.get('/', function (req, res) {
 });
 
 app.post('/uploadLexicalDatabase', jsonParser, function (req, res) {
+  lexicalDatabase = new LexicalDatabase(req.body);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
   saveLexicalDatabase();
 });
 
 app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
-  lexicalDatabase = new LexicalDatabase(req.body);
+  const {transcriptions, origin, target} = req.body;
+  lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
   saveLexicalDatabase();
