@@ -14,6 +14,10 @@ if (fs.existsSync(dictionaryFilePath)) {
   lexicalDatabase = new LexicalDatabase(undefined);
 }
 
+function saveLexicalDatabase(): void {
+  fs.writeFileSync(dictionaryFilePath, lexicalDatabase.toString(), 'utf8')
+}
+
 // Constants
 var DEFAULT_PORT = 8080;
 var DEFAULT_WHO = "World";
@@ -40,12 +44,14 @@ app.post('/uploadLexicalDatabase', jsonParser, function (req, res) {
   lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/replaceMorphologicalAnalysis', jsonParser, function (req, res) {
   lexicalDatabase = new LexicalDatabase(req.body);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/replaceStem', jsonParser, function (req, res) {
@@ -53,6 +59,7 @@ app.post('/replaceStem', jsonParser, function (req, res) {
   lexicalDatabase.changeStem(oldStem, newStem, pos, translation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/replacePos', jsonParser, function (req, res) {
@@ -60,6 +67,7 @@ app.post('/replacePos', jsonParser, function (req, res) {
   lexicalDatabase.changePos(stem, oldPos, newPos, translation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/replaceTranslation', jsonParser, function (req, res) {
@@ -67,6 +75,7 @@ app.post('/replaceTranslation', jsonParser, function (req, res) {
   lexicalDatabase.changeTranslation(stem, pos, oldTranslation, newTranslation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/addAttestation', jsonParser, function(req, res) {
@@ -74,6 +83,7 @@ app.post('/addAttestation', jsonParser, function(req, res) {
   lexicalDatabase.concordance.addAttestation(analysis, attestation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/removeAttestation', jsonParser, function(req, res) {
@@ -81,6 +91,7 @@ app.post('/removeAttestation', jsonParser, function(req, res) {
   lexicalDatabase.concordance.removeAttestation(analysis, attestation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/addLine', jsonParser, function(req, res) {
@@ -88,6 +99,7 @@ app.post('/addLine', jsonParser, function(req, res) {
   lexicalDatabase.corpus.addLine(attestation, line);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.post('/updateLine', jsonParser, function(req, res) {
@@ -95,6 +107,7 @@ app.post('/updateLine', jsonParser, function(req, res) {
   lexicalDatabase.corpus.updateLine(attestation, position, word);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
+  saveLexicalDatabase();
 });
 
 app.listen(PORT)

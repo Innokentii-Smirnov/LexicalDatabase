@@ -38,6 +38,9 @@ export class LexicalDatabase {
     const jsonText = JSON.stringify(obj, undefined, '\t');
     return jsonText;
   }
+  toString(): string {
+    return this.toJSON().toString();
+  }
   replaceMorphologicalAnalysis(transcriptions: string[], origin: string, target: string): void {
     this.dictionary.update(transcriptions, origin, target);
     this.corpus.update(origin, target);
