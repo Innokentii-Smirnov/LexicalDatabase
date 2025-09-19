@@ -32,7 +32,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-const jsonParser = bodyParser.json();
+const jsonParser = bodyParser.json({limit: '5mb'});
 app.get('/', function (req, res) {
   res.type('json');
   res.set('Access-Control-Allow-Origin', '*');
