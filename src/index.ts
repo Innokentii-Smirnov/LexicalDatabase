@@ -40,8 +40,6 @@ app.get('/', function (req, res) {
 });
 
 app.post('/uploadLexicalDatabase', jsonParser, function (req, res) {
-  const {transcriptions, origin, target} = req.body;
-  lexicalDatabase.replaceMorphologicalAnalysis(transcriptions, origin, target);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
   saveLexicalDatabase();
