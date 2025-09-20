@@ -5,7 +5,7 @@
 const div = document.createElement('div');
 div.append('Starting');
 document.body.append(div);
-const repl = new EventSource('http://localhost:8080/getMorphologicalAnalysisReplacements');
+const repl = new EventSource('http://localhost:8080/getLexicalDatabaseUpdates');
 const listener = event => {
   const div = document.createElement('div');
   div.append(event.data);

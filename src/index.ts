@@ -41,7 +41,7 @@ app.get('/', function (req, res) {
   res.send(lexicalDatabase.toJSON());
 });
 
-app.get('/getMorphologicalAnalysisReplacements', function (req, res) {
+app.get('/getLexicalDatabaseUpdates', function (req, res) {
   clients.push(res);
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Content-Type', 'text/event-stream');
