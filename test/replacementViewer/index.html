@@ -1,0 +1,24 @@
+<html>
+<head><title>Morphological analysis replacement viewer</title></head>
+<body>
+<script>
+const div = document.createElement('div');
+div.append('Starting');
+document.body.append(div);
+const repl = new EventSource('http://localhost:8080/getMorphologicalAnalysisReplacements');
+const listener = event => {
+  const div = document.createElement('div');
+  div.append(event.data);
+  document.body.append(div);
+};
+repl.addEventListener('replaceMorphologicalAnalysis', listener);
+repl.addEventListener('replaceStem', listener);
+repl.addEventListener('replaceTranslation', listener);
+repl.addEventListener('replacePos', listener);
+repl.addEventListener('addAttestation', listener);
+repl.addEventListener('removeAttestation', listener);
+repl.addEventListener('addLine', listener);
+repl.addEventListener('updateLine', listener);
+</script>
+</body>
+</html>
