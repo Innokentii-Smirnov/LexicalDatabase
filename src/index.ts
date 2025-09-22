@@ -49,9 +49,6 @@ app.get('/getLexicalDatabaseUpdates', function (req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders(); // flush the headers to establish SSE with client
-  const message = 'data: ' + JSON.stringify('Initial message');
-  const event = `event: replaceMorphologicalAnalysis\n${message}\n\n`;
-  res.write(event);
   res.on('close', () => {
     res.end();
     clients.splice(clients.indexOf(res), 1);
