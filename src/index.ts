@@ -21,6 +21,7 @@ function saveLexicalDatabase(): void {
 let clients: Response[] = [];
 
 // Constants
+const uploadLexicalDatabasePath = '/uploadLexicalDatabase';
 var DEFAULT_PORT = 8080;
 var DEFAULT_WHO = "World";
 var PORT = process.env.PORT || DEFAULT_PORT;
@@ -57,7 +58,7 @@ app.get('/getLexicalDatabaseUpdates', function (req, res) {
   });
 });
 
-app.post('/uploadLexicalDatabase', jsonParser, function (req, res) {
+app.post(uploadLexicalDatabasePath, jsonParser, function (req, res) {
   lexicalDatabase = new LexicalDatabase(req.body);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
@@ -145,10 +146,12 @@ function removePrefix(prefix: string, text: string): string {
 }
 
 app.post('/*path', jsonParser, function(req, res, next) {
-  const message = 'data: ' + JSON.stringify(req.body);
-  const event = `event: ${removePrefix('/', req.path)}\n${message}\n\n`;
-  console.log(`Sending to ${clients.length} clients:\n${event}`);
-  clients.forEach(client => client.write(event));
+  if (req.path !== uploadLexicalDatabasePath) {
+    const message = 'data: ' + JSON.stringify(req.body);
+    const event = `event: ${removePrefix('/', req.path)}\n${message}\n\n`;
+    console.log(`Sending to ${clients.length} clients:\n${event}`);
+    clients.forEach(client => client.write(event));
+  }
 });
 
 app.listen(PORT)
