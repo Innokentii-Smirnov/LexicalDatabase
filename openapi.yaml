@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: LexicalDatabase API
+  version: 1.0.0
+paths:
+  /replaceMorphologicalAnalysis:
+      post:
+        description: Replace a morphological analysis in the dictionary and all its occurences in the corpus, updating the concordance accordingly
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"transcriptions": ["nāli"], "origin": "nali @ Hirsch @ .ABS @ verb @ ", "target": "nāli @ Rehbock @ .ABS @ noun @ "}
+                properties:
+                  transcriptions:
+                    description: Transcriptions of the words for which the repalcement should be performed
+                    type: array
+                    items:
+                      type: string
+                  oldAnalysis:
+                    description: The analysis to replace
+                    type: string
+                  newAnalysis:
+                    description: The replacement analysis
+                    type: string
+        responses:
+          204:
+            description: The analysis was replaced or did not exist
+  /replaceStem:
+      post:
+        description: Replace the stem of the translation lexicon entry with the given stem, part of speech and translation
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {"oldStem": "nali", "newStem": "nāli", "pos": "noun", "translation": "Rehbock"}
+                properties:
+                  oldStem:
+                    type: string
+                  newStem:
+                    type: string
+                  pos:
+                    type: string
+                  translation:
+                    type: string
+        responses:
+          204:
+            description: The stem was replaced or such an entry did not exist
+  /replacePos:
+      post:
+        description: Replace the part of speech of the translation lexicon entry with the given stem, part of speech and translation
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {"stem": "nāli", "oldPos": "verb", "newPos": "noun", "translation": "Rehbock"}
+                properties:
+                  stem:
+                    type: string
+                  oldPos:
+                    type: string
+                  newPos:
+                    type: string
+                  translation:
+                    type: string
+        responses:
+          204:
+            description: The part of speech was replaced or such an entry did not exist
+  /replaceTranslation:
+      post:
+        description: Replace the translation of the translation lexicon entry with the given stem, part of speech and translation
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {"stem": "nāli", "pos": "noun", "oldTranslation": "Hirsch", "newTranslation": "Rehbock"}
+                properties:
+                  stem:
+                    type: string
+                  pos:
+                    type: string
+                  oldTranslation:
+                    type: string
+                  newTranslation:
+                    type: string
+        responses:
+          204:
+            description: The translation was replaced or such entry did not exist
+  /addAttestation:
+    post:
+      description: Add an attestation for the given morphological analysis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {"attestation": "KBo 32.14,Rs. 12a", "analysis": "naḫḫ-a-b @ sich setzen; sitzen; einsetzen @ INT-b @ verb @ "}
+              properties:
+                analysis:
+                  type: string
+                attestation:
+                  type: string
+      responses:
+        204:
+          description: The attestation has been added or the morphological analysis does not exist
+  /removeAttestation:
+    post:
+      description: Remove an attestation for the given morphological analysis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {"attestation": "KBo 32.14,Rs. 10a", "analysis": "tal-aḫḫ-ō-m @ herausziehen @ aḫḫ-TR.PFV-3A.SG @ verb @ "}
+              properties:
+                analysis:
+                  type: string
+                attestation:
+                  type: string
+      responses:
+        204:
+          description: The attestation has been removed or did not exist, or the morphological analysis does not exist
+  /addLine:
+    post:
+      description: Add a line to the corpus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {"attestation": "KBo 32.14,Rs. 14a", "line": [{"transliteration": "a-mu-ú-mi-ne-e-wa<subscr c=\"a\"/>", "segmentation": "am+ū+mi-nē-va", "gloss": "Administrator-RELAT.SG-DAT"}, {"transliteration": "ma-a-an-ni", "segmentation": "mānni","gloss":"3PRON.SG.ABS"}, {"transliteration": "e-ep-ri-eš", "segmentation": "ēvri-i-ž", "gloss": "Herr-3POSS.SG-ERG"}]}
+              properties:
+                attestation:
+                  type: string
+                line:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      transliteration:
+                        type: string
+                      segmentation:
+                        type: string
+                      gloss:
+                        type: string
+      responses:
+        204:
+          description: The line has been added to the corpus
+  /updateLine:
+    post:
+      description: Update a line in the corpus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {"attestation": "KBo 32.14,Rs. 11a", "position": 1, "word": {"transliteration": "pūziġum", "segmentation": "pūz+iġ-o-m", "analysis": "dive-TR.PFV-3A.SG"}}
+              properties:
+                attestation:
+                  type: string
+                position:
+                  type: integer
+                  minimum: 0
+                word:
+                  type: object
+                  properties:
+                    transliteration:
+                      type: string
+                    segmentation:
+                      type: string
+                    gloss:
+                      type: string
+      responses:
+        204:
+          description: The line has been updated or such a line does not exist
