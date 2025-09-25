@@ -15,7 +15,13 @@ if (fs.existsSync(dictionaryFilePath)) {
 }
 
 function saveLexicalDatabase(): void {
-  fs.writeFileSync(dictionaryFilePath, lexicalDatabase.toString(), 'utf8')
+  try {
+    fs.writeFileSync(dictionaryFilePath, lexicalDatabase.toString(), 'utf8');
+  } catch (err) {
+    console.log('Unable to save the database due to the following error:');
+    console.log(err);
+    console.log('Continuing without saving the database.\n');
+  }
 }
 
 let clients: Response[] = [];
