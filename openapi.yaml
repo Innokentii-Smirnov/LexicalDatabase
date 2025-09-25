@@ -5,6 +5,100 @@ info:
 servers:
   - url: http://127.0.0.1:8080
 paths:
+  /:
+    get:
+      description: Get the complete lexical database
+      responses:
+        200:
+          description: The lexical database as JSON
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dictionary:
+                    type: object
+                    example: {"nāli": ["nāli @ Rehbock @ .ABS @ noun @ "]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  glosses:
+                    type: object
+                    example: {"nāli,noun": ["Rehbock"]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  concordance:
+                    type: object
+                    example: {"nāli @ Rehbock @ .ABS @ noun @ ": ["KBo 32.14,Vs. 12a"]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  corpus:
+                    type: object
+                    example: {"KBo 32.14,Vs. 12a": [{"transliteration": "na-a-li", "segmentation": "nāli", "gloss": "Rehbock.ABS"}, {"transliteration": "ke-e-bi-il-la-a-šu-uš", "segmentation": "kēbe+li-na-āž-ož", "gloss": "Jäger-RELAT.PL-PL-ERG"}, {"transliteration": "ḫa-a-i-te", "segmentation": "ḫā-id-e", "gloss": "nehmen-PL.A-3JUSS"}]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          transliteration:
+                            type: string
+                          segmentation:
+                            type: string
+                          gloss:
+                            type: string
+  /uploadLexicalDatabase:
+    post:
+      description: Upload a complete lexical database, replacing the existing one
+      requestBody:
+        description: The new lexical database
+        content:
+          application/json:
+              schema:
+                type: object
+                properties:
+                  dictionary:
+                    type: object
+                    example: {"nāli": ["nāli @ Rehbock @ .ABS @ noun @ "]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  glosses:
+                    type: object
+                    example: {"nāli,noun": ["Rehbock"]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  concordance:
+                    type: object
+                    example: {"nāli @ Rehbock @ .ABS @ noun @ ": ["KBo 32.14,Vs. 12a"]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  corpus:
+                    type: object
+                    example: {"KBo 32.14,Vs. 12a": [{"transliteration": "na-a-li", "segmentation": "nāli", "gloss": "Rehbock.ABS"}, {"transliteration": "ke-e-bi-il-la-a-šu-uš", "segmentation": "kēbe+li-na-āž-ož", "gloss": "Jäger-RELAT.PL-PL-ERG"}, {"transliteration": "ḫa-a-i-te", "segmentation": "ḫā-id-e", "gloss": "nehmen-PL.A-3JUSS"}]}
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          transliteration:
+                            type: string
+                          segmentation:
+                            type: string
+                          gloss:
+                            type: string
+      responses:
+        204:
+          description: The database has been replaced with the provided one.
   /replaceMorphologicalAnalysis:
       post:
         description: Replace a morphological analysis in the dictionary and all its occurences in the corpus, updating the concordance accordingly
