@@ -106,7 +106,7 @@ app.post('/replaceTranslation', jsonParser, function (req, res, next) {
 
 app.post('/addAttestation', jsonParser, function(req, res, next) {
   const { transcription, analysis, attestation } = req.body;
-  lexicalDatabase.dictionary.add(transcription, attestation);
+  lexicalDatabase.dictionary.add(transcription, analysis);
   lexicalDatabase.concordance.addAttestation(analysis, attestation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
