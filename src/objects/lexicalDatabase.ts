@@ -2,6 +2,7 @@ import { Dictionary } from './dictionary.js'
 import { TranslationLexicon } from './translationLexicon.js'
 import { Concordance } from './concordance.js'
 import { Corpus, Line } from './corpus.js'
+import { readMorphAnalysisValue } from '../morphologicalAnalysis/auxiliary.js';
 
 type Representation = {
   dictionary: {[key: string]: string[]};
@@ -54,5 +55,13 @@ export class LexicalDatabase {
   }
   changeTranslation(stem: string, pos: string, oldTranslation: string, newTranslation: string): void {
     this.translationLexicon.changeTranslation(stem, pos, oldTranslation, newTranslation);
+  }
+  addAttestation(transcription: string, analysis: string, attestation: string): void {
+    this.dictionary.add(transcription, analysis);
+    const ma = readMorphAnalysisValue(analysis);
+    if (ma !== undefined) {
+      this.translationLexicon.extractStemTranslation(ma);
+    }
+    this.concordance.addAttestation(analysis, attestation);
   }
 }

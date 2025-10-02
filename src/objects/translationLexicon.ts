@@ -1,5 +1,7 @@
 import { setMapToObject } from '../conversion.js';
-import { objectToSetValuedMap } from '../common/utils.js';
+import { objectToSetValuedMap, add } from '../common/utils.js';
+import { MorphologicalAnalysis } from '../model/morphologicalAnalysis.js';
+import { getStem } from '../common/splitter.js';
 
 type Representation = {[key: string]: string[]};
 
@@ -24,6 +26,15 @@ export class TranslationLexicon {
   }
   toObject(): Representation {
     return setMapToObject(this.glosses);
+  }
+
+  extractStemTranslation(ma: MorphologicalAnalysis): void {
+    const segmentation = ma.referenceWord;
+    const { translation } = ma;
+    const pos = ma.paradigmClass;
+    const stem = getStem(segmentation);
+    const key = getKey(stem, pos);
+    add(this.glosses, key, translation);
   }
 
   changeStem(oldStem: string, newStem: string, pos: string, translation: string): void {
