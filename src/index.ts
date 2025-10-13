@@ -114,8 +114,8 @@ app.post('/addAttestation', jsonParser, function(req, res, next) {
 });
 
 app.post('/removeAttestation', jsonParser, function(req, res, next) {
-  const { analysis, attestation } = req.body;
-  lexicalDatabase.concordance.removeAttestation(analysis, attestation);
+  const { transciption, analysis, attestation } = req.body;
+  lexicalDatabase.removeAttestation(transciption, analysis, attestation);
   res.set('Access-Control-Allow-Origin', '*');
   res.sendStatus(204);
   saveLexicalDatabase();

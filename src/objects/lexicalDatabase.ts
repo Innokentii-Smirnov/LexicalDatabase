@@ -64,4 +64,10 @@ export class LexicalDatabase {
     }
     this.concordance.addAttestation(analysis, attestation);
   }
+  removeAttestation(transcription: string, analysis: string, attestation: string): void {
+    this.concordance.removeAttestation(analysis, attestation);
+    if (!this.concordance.concordance.has(analysis)) {
+      this.dictionary.remove(transcription, analysis);
+    }
+  }
 }
