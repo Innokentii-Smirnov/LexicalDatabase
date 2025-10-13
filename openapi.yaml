@@ -191,14 +191,16 @@ paths:
             description: The translation was replaced or such entry did not exist
   /addAttestation:
     post:
-      description: Add an attestation for the given morphological analysis
+      description: Add an attestation for the given morphological analysis to the concordance. Add the analysis to the dictionary for the given transcription (if it is not already present).
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example: {"attestation": "KBo 32.14,Rs. 12a", "analysis": "naḫḫ-a-b @ sich setzen; sitzen; einsetzen @ INT-b @ verb @ "}
+              example: {"transcription": "naḫḫab", "attestation": "KBo 32.14,Rs. 12a", "analysis": "naḫḫ-a-b @ sich setzen; sitzen; einsetzen @ INT-b @ verb @ "}
               properties:
+                transcription:
+                  type: string
                 analysis:
                   type: string
                 attestation:
@@ -208,14 +210,16 @@ paths:
           description: The attestation has been added or the morphological analysis does not exist
   /removeAttestation:
     post:
-      description: Remove an attestation for the given morphological analysis
+      description: Remove an attestation for the given morphological analysis from the concordance. If the analysis has no attestations as a result, remove it from the dictionary for the given transcription.
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example: {"attestation": "KBo 32.14,Rs. 10a", "analysis": "tal-aḫḫ-ō-m @ herausziehen @ aḫḫ-TR.PFV-3A.SG @ verb @ "}
+              example: {"transcription": "talaḫḫōm", "attestation": "KBo 32.14,Rs. 10a", "analysis": "tal-aḫḫ-ō-m @ herausziehen @ aḫḫ-TR.PFV-3A.SG @ verb @ "}
               properties:
+                transcription:
+                  type: string
                 analysis:
                   type: string
                 attestation:
