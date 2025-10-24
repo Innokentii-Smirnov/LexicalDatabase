@@ -1,0 +1,1 @@
+kate $(docker volume inspect tlh_hur_lex_db_data_volume | jq '.[0]["Mountpoint"]' | sed 's/"//g')/Dictionary.json
